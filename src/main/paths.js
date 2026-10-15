@@ -19,6 +19,10 @@ const paths = {
   },
 
   ensureFile(file, defaultContent) {
+    const dir = path.dirname(file);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     if (!fs.existsSync(file)) {
       fs.writeFileSync(file, JSON.stringify(defaultContent, null, 2));
     }
