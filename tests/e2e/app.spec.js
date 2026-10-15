@@ -114,3 +114,55 @@ test.describe("Electron App", () => {
     expect(items).toBe(0);
   });
 });
+
+// ============================================================
+// Prod-mode smoke test (loadRenderer mode = file://)
+// ============================================================
+test.describe("Prod Smoke", () => {
+  let electronApp;
+  let window;
+
+  test.beforeAll(async () => {
+    electronApp = await _electron.launch({
+      args: [path.join(appPath, "src/main/index.js")],
+      // no VITE_DEV_SERVER_URL → loadFile mode
+    });
+    window = await electronApp.firstWindow();
+    await window.waitForLoadState("domcontentloaded");
+    await window.waitForFunction(
+      () => {
+        const badge = document.getElementById("platform");
+        return badge && badge.textContent !== "...";
+      },
+      { timeout: 10000 },
+    );
+  });
+
+  test.afterAll(async () => {
+    if (electronApp) await electronApp.close();
+  });
+
+  test("prod-mode loads and api available", async () => {
+    const title = await window.locator("h1").textContent();
+    expect(title).toBe("CrossPlatform");
+
+    const platform = await window.evaluate(() => window.api?.platform);
+    expect(["linux", "darwin", "win32"]).toContain(platform);
+
+    expect(await window.locator("#platform").textContent()).toMatch(
+      /Linux|macOS|Windows/,
+    );
+  });
+
+  test("prod-mode crud works", async () => {
+    await window.locator("#title").fill("Prod Check");
+    await window.locator("#content").fill("prod content");
+    await window.locator("#btn-new").click();
+    await window.waitForSelector(".item");
+    const items = await window.locator(".item").count();
+    expect(items).toBe(1);
+
+    const t = await window.locator(".item .title").first().textContent();
+    expect(t).toBe("Prod Check");
+  });
+});
