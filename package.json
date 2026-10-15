@@ -27,7 +27,9 @@
     "electron",
     "cross-platform"
   ],
-  "author": "",
+  "author": "Your Name <your.email@example.com>",
+  "homepage": "https://github.com/yourusername/electron-cross-platform",
+  "repository": "https://github.com/yourusername/electron-cross-platform",
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -55,8 +57,7 @@
     "appId": "com.example.electron-cross-platform",
     "productName": "CrossPlatform",
     "directories": {
-      "output": "dist",
-      "build": "build"
+      "output": "dist"
     },
     "files": [
       "src/**/*",
