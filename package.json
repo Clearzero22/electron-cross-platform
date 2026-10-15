@@ -1,0 +1,121 @@
+{
+  "name": "electron-cross-platform",
+  "version": "1.0.0",
+  "description": "Cross-platform Electron app with unified data layer",
+  "main": "src/main/index.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "concurrently \"npm run dev:renderer\" \"wait-on http://localhost:5173 && electron .\"",
+    "dev:renderer": "vite",
+    "build:renderer": "vite build",
+    "dist": "electron-builder --linux --mac --win",
+    "dist:linux": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:unit": "jest",
+    "lint": "eslint src tests",
+    "lint:fix": "eslint src tests --fix",
+    "format": "prettier --write src tests",
+    "format:check": "prettier --check src tests",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "electron",
+    "cross-platform"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "concurrently": "^9.1.0",
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9",
+    "eslint": "^10.12.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jest": "^30.5.2",
+    "lint-staged": "^17.6.0",
+    "node-gyp": "^13.1.0",
+    "prettier": "^3.9.10",
+    "vite": "^6.0.0",
+    "wait-on": "^8.0.1"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0"
+  },
+  "build": {
+    "appId": "com.example.electron-cross-platform",
+    "productName": "CrossPlatform",
+    "directories": {
+      "output": "dist",
+      "build": "build"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.utilities",
+      "identity": null
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true,
+    "electron@33.4.11": true,
+    "esbuild@0.25.12": true,
+    "lzma-native@8.0.6": true,
+    "unrs-resolver@1.12.2": true,
+    "@parcel/watcher@2.6.0": true
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "tests/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ],
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
