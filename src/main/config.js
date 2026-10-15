@@ -1,7 +1,7 @@
-const fs = require('fs');
-const { EventEmitter } = require('events');
-const paths = require('./paths');
-const platform = require('./platform');
+const fs = require("fs");
+const { EventEmitter } = require("events");
+const paths = require("./paths");
+const platform = require("./platform");
 
 // ============================================================
 // 默认配置（三端通用 + 平台特定）
@@ -19,10 +19,10 @@ const defaults = {
 
   // 外观
   appearance: {
-    theme: 'dark', // dark | light | auto
+    theme: "dark", // dark | light | auto
     fontSize: 14,
-    locale: 'auto', // auto | zh-CN | en-US
-    accentColor: '#0ea5e9',
+    locale: "auto", // auto | zh-CN | en-US
+    accentColor: "#0ea5e9",
   },
 
   // 行为
@@ -38,7 +38,7 @@ const defaults = {
   platform: {
     mac: {
       vibrancy: true, // 毛玻璃效果
-      titleBarStyle: 'hiddenInset',
+      titleBarStyle: "hiddenInset",
       trafficLightPosition: { x: 12, y: 12 },
     },
     win: {
@@ -70,15 +70,15 @@ class ConfigManager extends EventEmitter {
 
   // 读取：config.get('window.width')
   get(key) {
-    return key.split('.').reduce((obj, k) => obj?.[k], this.cache);
+    return key.split(".").reduce((obj, k) => obj?.[k], this.cache);
   }
 
   // 写入：config.set('window.width', 1400)
   set(key, value) {
-    const keys = key.split('.');
+    const keys = key.split(".");
     let obj = this.cache;
     for (let i = 0; i < keys.length - 1; i++) {
-      if (typeof obj[keys[i]] !== 'object' || obj[keys[i]] === null) {
+      if (typeof obj[keys[i]] !== "object" || obj[keys[i]] === null) {
         obj[keys[i]] = {};
       }
       obj = obj[keys[i]];
@@ -86,7 +86,7 @@ class ConfigManager extends EventEmitter {
     const oldValue = obj[keys[keys.length - 1]];
     obj[keys[keys.length - 1]] = value;
     this.save();
-    this.emit('change', { key, oldValue, value });
+    this.emit("change", { key, oldValue, value });
     return value;
   }
 
@@ -98,21 +98,21 @@ class ConfigManager extends EventEmitter {
   // 获取当前平台的配置（合并通用 + 平台特定）
   getPlatformConfig(section) {
     const platformKey = platform.isMac
-      ? 'mac'
+      ? "mac"
       : platform.isWin
-        ? 'win'
-        : 'linux';
+        ? "win"
+        : "linux";
     const platformSection = this.get(`platform.${platformKey}`);
     return { ...(defaults[section] || {}), ...(platformSection || {}) };
   }
 
   // 获取主题（处理 auto）
   getTheme() {
-    const theme = this.get('appearance.theme');
-    if (theme !== 'auto') return theme;
+    const theme = this.get("appearance.theme");
+    if (theme !== "auto") return theme;
     // 简单判断：6 点到 18 点为浅色
     const hour = new Date().getHours();
-    return hour >= 6 && hour < 18 ? 'light' : 'dark';
+    return hour >= 6 && hour < 18 ? "light" : "dark";
   }
 
   save() {
@@ -125,10 +125,10 @@ class ConfigManager extends EventEmitter {
     for (const key in source) {
       if (
         source[key] &&
-        typeof source[key] === 'object' &&
+        typeof source[key] === "object" &&
         !Array.isArray(source[key]) &&
         target[key] &&
-        typeof target[key] === 'object' &&
+        typeof target[key] === "object" &&
         !Array.isArray(target[key])
       ) {
         result[key] = this.deepMerge(target[key], source[key]);

@@ -1,9 +1,9 @@
-const { app, Notification } = require('electron');
-const path = require('path');
+const { app, Notification } = require("electron");
+const path = require("path");
 
-const isMac = process.platform === 'darwin';
-const isWin = process.platform === 'win32';
-const isLinux = process.platform === 'linux';
+const isMac = process.platform === "darwin";
+const isWin = process.platform === "win32";
+const isLinux = process.platform === "linux";
 
 const platform = {
   isMac,
@@ -21,14 +21,14 @@ const platform = {
       width: 1200,
       height: 800,
       webPreferences: {
-        preload: path.join(__dirname, '../preload/preload.js'),
+        preload: path.join(__dirname, "../preload/preload.js"),
         contextIsolation: true,
         nodeIntegration: false,
         sandbox: false,
       },
     };
     if (isMac) {
-      opts.titleBarStyle = 'hiddenInset';
+      opts.titleBarStyle = "hiddenInset";
       opts.trafficLightPosition = { x: 12, y: 12 };
     } else if (isWin) {
       opts.frame = true;
@@ -49,7 +49,7 @@ const platform = {
 
   // 统一应用退出行为
   setupAppEvents() {
-    app.on('window-all-closed', () => {
+    app.on("window-all-closed", () => {
       if (!isMac) app.quit();
     });
   },
